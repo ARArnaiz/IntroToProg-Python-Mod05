@@ -66,25 +66,23 @@ while (True):
 
     # Input user data
     if menu_choice == "1":  # This will not work if it is an integer!
-        # Added structured error handling when the user enters an invalid first name.
+        # Added structured error handling when the user enters an invalid first/last name.
         try:
             student_first_name = input("Enter the student's first name: ")
             if not student_first_name.isalpha():
                 raise ValueError("First name must be a string of letters only!")
-        except ValueError as e:
-            print(e)  # Prints the custom message
-            print("-- Technical Error Message -- ")
-            print(e.__doc__)
-            print(e.__str__())
-        except Exception as e:
-            print("There was a non-specific error!\n")
-            print("-- Technical Error Message -- ")
-            print(e, e.__doc__, type(e), sep='\n')
-        # Added structured error handling when the user enters an invalid last name.
-        try:
             student_last_name = input("Enter the student's last name: ")
             if not student_last_name.isalpha():
                 raise ValueError("Last name must be a string of letters only!")
+            course_name = input("Please enter the name of the course: ")
+            student_data = {"FirstName": student_first_name,
+                            "LastName": student_last_name,
+                            "CourseName": course_name}
+            students.append(student_data)
+            print(
+                f"You have registered {student_first_name} {student_last_name} "
+                f"for {course_name}."
+            )
         except ValueError as e:
             print(e)  # Prints the custom message
             print("-- Technical Error Message -- ")
@@ -94,15 +92,6 @@ while (True):
             print("There was a non-specific error!\n")
             print("-- Technical Error Message -- ")
             print(e, e.__doc__, type(e), sep='\n')
-        course_name = input("Please enter the name of the course: ")
-        student_data = {"FirstName": student_first_name,
-                        "LastName": student_last_name,
-                        "CourseName": course_name}
-        students.append(student_data)
-        print(
-            f"You have registered {student_first_name} {student_last_name} "
-            f"for {course_name}."
-        )
         continue
 
     # Present the current data
@@ -124,6 +113,12 @@ while (True):
         try:
             file = open(FILE_NAME, "w")
             json.dump(students, file, indent=4)
+            print("The following data was saved to file!")
+            for student in students:
+                print(
+                    f"Student {student['FirstName']} {student['LastName']} "
+                    f"is enrolled in {student['CourseName']}"
+                )
         except TypeError as e:
             print("Please check that the data is a valid JSON format\n")
             print("-- Technical Error Message -- ")
@@ -136,13 +131,6 @@ while (True):
             # Check if a file object exists and is still open
             if file is not None and file.closed == False:
                 file.close()
-
-        print("The following data was saved to file!")
-        for student in students:
-            print(
-                f"Student {student['FirstName']} {student['LastName']} "
-                f"is enrolled in {student['CourseName']}"
-            )
         continue
 
     # Stop the loop
